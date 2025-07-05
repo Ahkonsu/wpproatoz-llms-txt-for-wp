@@ -25,9 +25,9 @@ require 'plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 $myUpdateChecker = PucFactory::buildUpdateChecker(
-	'https://github.com/Ahkonsu//wpproatoz-llms-txt-for-wp/',
+	'https://github.com/Ahkonsu/wpproatoz-llms-txt-for-wp/',
 	__FILE__,
-	'/wpproatoz-llms-txt-for-wp'
+	'wpproatoz-llms-txt-for-wp'
 );
 
 //Set the branch that contains the stable release.
