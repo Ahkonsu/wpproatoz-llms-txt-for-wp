@@ -19,6 +19,28 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+ ////***check for updates code
+
+require 'plugin-update-checker/plugin-update-checker.php';
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+
+$myUpdateChecker = PucFactory::buildUpdateChecker(
+	'https://github.com/Ahkonsu//wpproatoz-llms-txt-for-wp/',
+	__FILE__,
+	'/wpproatoz-llms-txt-for-wp'
+);
+
+//Set the branch that contains the stable release.
+$myUpdateChecker->setBranch('main');
+
+//$myUpdateChecker->getVcsApi()->enableReleaseAssets();
+ 
+ 
+//Optional: If you're using a private repository, specify the access token like this:
+//$myUpdateChecker->setAuthentication('your-token-here');
+
+/////////////////////
+
 // Define constants.
 define( 'LLMS_TXT_VERSION', '1.0.0' );
 define( 'LLMS_TXT_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
