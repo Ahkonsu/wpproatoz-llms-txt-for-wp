@@ -5,7 +5,9 @@
  * @package LLMsTxtForWP
  */
 
-use League\HTMLToMarkdown\HtmlConverter;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
 
 class LLMS_Txt_Markdown {
 
@@ -16,6 +18,10 @@ class LLMS_Txt_Markdown {
 	 * @return string
 	 */
 	public static function convert( $html ) {
+		if ( ! class_exists( 'League\HTMLToMarkdown\HtmlConverter' ) ) {
+			return '';
+		}
+
 		$markdown_arguments = array(
 			'strip_tags' => true,
 		);
@@ -25,8 +31,16 @@ class LLMS_Txt_Markdown {
 		 */
 		$markdown_arguments = apply_filters( 'llms_txt_markdown_arguments', $markdown_arguments );
 
-		$converter = new HtmlConverter( $markdown_arguments );
-		return $converter->convert( $html );
+		// Sanitize HTML input to prevent XSS.
+		$html = wp_kses_post( $html );
+
+		try {
+			$converter = new League\HTMLToMarkdown\HtmlConverter( $markdown_arguments );
+			$result = $converter->convert( $html );
+			return $result;
+		} catch ( Exception $e ) {
+			return '';
+		}
 	}
 
 	/**
@@ -37,7 +51,7 @@ class LLMS_Txt_Markdown {
 	 * @return string
 	 */
 	public static function convert_post_to_markdown( $post, $include_meta = true ) {
-		if ( ! $post ) {
+		if ( ! $post instanceof WP_Post ) {
 			return '';
 		}
 
@@ -52,9 +66,12 @@ class LLMS_Txt_Markdown {
 		}
 
 		// Convert content using the convert method.
-		$content   = apply_filters( 'the_content', $post->post_content );
-		$markdown .= self::convert( $content );
+		$content = apply_filters( 'the_content', $post->post_content );
+		$converted_content = self::convert( $content );
+		$markdown .= $converted_content;
 
 		return apply_filters( 'llms_txt_markdown_content', $markdown, $post );
 	}
 }
+
+?>

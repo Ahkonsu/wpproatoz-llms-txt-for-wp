@@ -26,8 +26,8 @@ class LLMS_Txt_Admin {
 	 */
 	public function add_plugin_admin_menu() {
 		add_options_page(
-			__( 'LLMs.txt Settings', 'llms-txt-for-wp' ),
-			__( 'LLMs.txt', 'llms-txt-for-wp' ),
+			__( 'LLMs.txt Settings', 'wpproatoz-llms-txt-for-wp' ),
+			__( 'LLMs.txt', 'wpproatoz-llms-txt-for-wp' ),
 			'manage_options',
 			'llms-txt-settings',
 			array( $this, 'display_plugin_settings_page' )
@@ -46,14 +46,14 @@ class LLMS_Txt_Admin {
 
 		add_settings_section(
 			'llms_txt_general_section',
-			__( 'General Settings', 'llms-txt-for-wp' ),
+			__( 'General Settings', 'wpproatoz-llms-txt-for-wp' ),
 			array( $this, 'render_section_info' ),
 			'llms-txt-settings'
 		);
 
 		add_settings_field(
 			'selected_post',
-			__( 'Selected Page for llms.txt', 'llms-txt-for-wp' ),
+			__( 'Selected Page for llms.txt', 'wpproatoz-llms-txt-for-wp' ),
 			array( $this, 'render_selected_post_field' ),
 			'llms-txt-settings',
 			'llms_txt_general_section'
@@ -61,7 +61,7 @@ class LLMS_Txt_Admin {
 
 		add_settings_field(
 			'post_types',
-			__( 'Post Types to Include', 'llms-txt-for-wp' ),
+			__( 'Post Types to Include', 'wpproatoz-llms-txt-for-wp' ),
 			array( $this, 'render_post_types_field' ),
 			'llms-txt-settings',
 			'llms_txt_general_section'
@@ -69,7 +69,7 @@ class LLMS_Txt_Admin {
 
 		add_settings_field(
 			'posts_limit',
-			__( 'Posts Limit', 'llms-txt-for-wp' ),
+			__( 'Posts Limit', 'wpproatoz-llms-txt-for-wp' ),
 			array( $this, 'render_posts_limit_field' ),
 			'llms-txt-settings',
 			'llms_txt_general_section'
@@ -77,7 +77,7 @@ class LLMS_Txt_Admin {
 
 		add_settings_field(
 			'enable_md_support',
-			__( 'Enable *.md Support', 'llms-txt-for-wp' ),
+			__( 'Enable *.md Support', 'wpproatoz-llms-txt-for-wp' ),
 			array( $this, 'render_md_support_field' ),
 			'llms-txt-settings',
 			'llms_txt_general_section'
@@ -90,7 +90,7 @@ class LLMS_Txt_Admin {
 	public function display_plugin_settings_page() {
 		?>
 		<div class="wrap">
-			<h2><?php echo esc_html__( 'LLMs.txt Settings', 'llms-txt-for-wp' ); ?></h2>
+			<h2><?php echo esc_html__( 'LLMs.txt Settings', 'wpproatoz-llms-txt-for-wp' ); ?></h2>
 			<form method="post" action="options.php">
 				<?php
 				settings_fields( 'llms_txt_settings' );
@@ -99,7 +99,7 @@ class LLMS_Txt_Admin {
 				<p class="description" style="margin-bottom: -10px;">
 					<?php
 					printf(
-						esc_html__( 'With these settings, your %1$s file will show %2$s.', 'llms-txt-for-wp' ),
+						esc_html__( 'With these settings, your %1$s file will show %2$s.', 'wpproatoz-llms-txt-for-wp' ),
 						'<a href="' . esc_url( home_url( 'llms.txt' ) ) . '" target="_blank">llms.txt</a>',
 						'<strong id="llms-txt-settings-hint"></strong>'
 					);
@@ -108,13 +108,13 @@ class LLMS_Txt_Admin {
 						<?php
 						printf(
 							// translators: %1$s is a list of post types.
-							esc_html__( 'Markdown versions will also be available when you add the .md extension to the URL of %1$s.', 'llms-txt-for-wp' ),
+							esc_html__( 'Markdown versions will also be available when you add the .md extension to the URL of %1$s.', 'wpproatoz-llms-txt-for-wp' ),
 							'<strong id="llms-txt-settings-hint-md-support-post-types"></strong>'
 						);
 						?>
 					</span>
 					<span id="llms-txt-settings-hint-no-md-support" style="display: none;">
-						<?php esc_html_e( 'Markdown versions of posts will not be available when you add the .md extension to the URL.', 'llms-txt-for-wp' ); ?>
+						<?php esc_html_e( 'Markdown versions of posts will not be available when you add the .md extension to the URL.', 'wpproatoz-llms-txt-for-wp' ); ?>
 					</span>
 				</p>
 				<div style="margin-top: 30px; display: flex; align-items: center; gap: 16px;">
@@ -122,8 +122,8 @@ class LLMS_Txt_Admin {
 					<p class="description" style="margin: 0;">
 						<?php
 						printf(
-							esc_html__( 'Tip: you can use the available %1$s to customize the content of your llms.txt file.', 'llms-txt-for-wp' ),
-							'<a href="https://github.com/search?q=repo%3AWP-Autoplugin%2Fllms-txt-for-wp%20apply_filters&type=code" target="_blank">' . esc_html__( 'filter hooks', 'llms-txt-for-wp' ) . '</a>'
+							esc_html__( 'Tip: you can use the available %1$s to customize the content of your llms.txt file.', 'wpproatoz-llms-txt-for-wp' ),
+							'<a href="https://github.com/search?q=repo%3AWP-Autoplugin%2Fllms-txt-for-wp%20apply_filters&type=code" target="_blank">' . esc_html__( 'filter hooks', 'wpproatoz-llms-txt-for-wp' ) . '</a>'
 						);
 						?>
 					</p>
@@ -198,7 +198,7 @@ class LLMS_Txt_Admin {
 	public function render_section_info() {
 		echo '<p>';
 		printf(
-			esc_html__( 'Configure your %1$s settings below.', 'llms-txt-for-wp' ) . '</p>',
+			esc_html__( 'Configure your %1$s settings below.', 'wpproatoz-llms-txt-for-wp' ) . '</p>',
 			'<a href="' . esc_url( home_url( 'llms.txt' ) ) . '" target="_blank">llms.txt</a>'
 		);
 	}
@@ -211,12 +211,12 @@ class LLMS_Txt_Admin {
 			array(
 				'name'              => 'llms_txt_settings[selected_post]',
 				'id'				=> 'llms_txt_settings_selected_post',
-				'show_option_none'  => __( 'Select a page', 'llms-txt-for-wp' ),
+				'show_option_none'  => __( 'Select a page', 'wpproatoz-llms-txt-for-wp' ),
 				'option_none_value' => '',
 				'selected'          => $this->settings['selected_post'],
 			)
 		);
-		echo '<p class="description">' . esc_html__( 'If a page is selected, only that page will be included in the llms.txt file. If no page is selected, all posts from selected post types will be included.', 'llms-txt-for-wp' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'If a page is selected, only that page will be included in the llms.txt file. If no page is selected, all posts from selected post types will be included.', 'wpproatoz-llms-txt-for-wp' ) . '</p>';
 	}
 
 	/**
@@ -242,7 +242,7 @@ class LLMS_Txt_Admin {
 				esc_html( $post_type->label )
 			);
 		}
-		echo '<p class="description">' . esc_html__( 'Select the post types to include in the llms.txt file and the *.md support.', 'llms-txt-for-wp' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'Select the post types to include in the llms.txt file and the *.md support.', 'wpproatoz-llms-txt-for-wp' ) . '</p>';
 	}
 
 	/**
@@ -264,7 +264,7 @@ class LLMS_Txt_Admin {
 			'<input id="llms_txt_settings_enable_md_support" type="checkbox" name="llms_txt_settings[enable_md_support]" value="yes" %s>',
 			checked( $this->settings['enable_md_support'], 'yes', false )
 		);
-		esc_html_e( 'Enable this option to provide a Markdown version of each post.', 'llms-txt-for-wp' );
+		esc_html_e( 'Enable this option to provide a Markdown version of each post.', 'wpproatoz-llms-txt-for-wp' );
 		echo '</label></p>';
 	}
 
@@ -277,10 +277,24 @@ class LLMS_Txt_Admin {
 	public function validate_settings( $input ) {
 		$output = array();
 
-		$output['selected_post']     = isset( $input['selected_post'] ) ? absint( $input['selected_post'] ) : '';
-		$output['post_types']        = isset( $input['post_types'] ) ? array_map( 'sanitize_text_field', $input['post_types'] ) : array();
-		$output['posts_limit']       = isset( $input['posts_limit'] ) ? absint( $input['posts_limit'] ) : 100;
-		$output['enable_md_support'] = isset( $input['enable_md_support'] ) ? 'yes' : 'no';
+		// Sanitize selected_post
+		$output['selected_post'] = isset( $input['selected_post'] ) ? absint( $input['selected_post'] ) : '';
+		if ( $output['selected_post'] === 0 ) {
+			$output['selected_post'] = '';
+		}
+
+		// Sanitize and validate post_types
+		$output['post_types'] = isset( $input['post_types'] ) && is_array( $input['post_types'] ) ? array_map( 'sanitize_text_field', $input['post_types'] ) : array();
+		$valid_post_types = get_post_types( array( 'public' => true ), 'names' );
+		$output['post_types'] = array_filter( $output['post_types'], function( $post_type ) use ( $valid_post_types ) {
+			return in_array( $post_type, $valid_post_types, true );
+		});
+
+		// Sanitize posts_limit
+		$output['posts_limit'] = isset( $input['posts_limit'] ) ? max( 1, absint( $input['posts_limit'] ) ) : 100;
+
+		// Sanitize enable_md_support
+		$output['enable_md_support'] = isset( $input['enable_md_support'] ) && $input['enable_md_support'] === 'yes' ? 'yes' : '';
 
 		return $output;
 	}
@@ -292,7 +306,9 @@ class LLMS_Txt_Admin {
 	 * @return array
 	 */
 	public function add_action_links( $links ) {
-		$links[] = '<a href="' . esc_url( admin_url( 'options-general.php?page=llms-txt-settings' ) ) . '">' . esc_html__( 'Settings', 'llms-txt-for-wp' ) . '</a>';
+		$links[] = '<a href="' . esc_url( admin_url( 'options-general.php?page=llms-txt-settings' ) ) . '">' . esc_html__( 'Settings', 'wpproatoz-llms-txt-for-wp' ) . '</a>';
 		return $links;
 	}
 }
+
+?>
