@@ -1,17 +1,23 @@
 <?php
 /**
- * Plugin Name: LLMs.txt for WP
- * Plugin URI: https://github.com/WP-Autoplugin/llms-txt-for-wp
- * Description: Generates LLM-friendly content as llms.txt and provides markdown versions of posts.
+ * Plugin Name: WPProAtoz LLMs.txt for WP
+ * Plugin URI: https://github.com/Ahkonsu/wpproatoz-llms-txt-for-wp
+ * Forked from: https://github.com/WP-Autoplugin/llms-txt-for-wp
+ * Description: This plugin will generate LLM-friendly content as an llms.txt file and provides markdown versions of posts. This make it easier for AI to search your site and use less resources when doing do. 
  * Version: 1.0.0
- * Author: Balázs Piller
- * Author URI: https://wp-autoplugin.com
+ * Requires at least: 6.0
+ * Requires PHP: 8.0
+ * Author: WPProAtoZ
+ * Author URI: https://WPProAtoZ.com
+ * OriginalAuthor: Balázs Piller
+ * OriginalAuthor URI: https://wp-autoplugin.com
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: llms-txt-for-wp
+ * Text Domain: wpproatoz-llms-txt-for-wp
  * Domain Path: /languages
- *
- * @package LLMsTxtForWP
+ * Update URI: https://github.com/Ahkonsu/wpproatoz-turn-off-wpmail/releases
+ * GitHub Plugin URI: https://github.com/Ahkonsu/wpproatoz-turn-off-wpmail/releases
+ * GitHub Branch: main
  */
 
 // Abort if this file is called directly.
