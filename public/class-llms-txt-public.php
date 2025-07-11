@@ -269,6 +269,9 @@ class LLMS_Txt_Public {
 				} );
 			}
 
+			// Record cache attempt.
+			set_transient( 'llms_txt_cache_attempted', true, HOUR_IN_SECONDS );
+
 			// Output the llms.txt content with proper headers.
 			header( 'Content-Type: text/plain; charset=utf-8' );
 			echo apply_filters( 'llms_txt_index_content', $output, current_user_can( 'read' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is already escaped.

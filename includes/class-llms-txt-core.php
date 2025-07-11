@@ -55,8 +55,8 @@ class LLMS_Txt_Core {
 		add_action( 'init', array( $this->public, 'add_rewrite_rules' ) );
 		add_action( 'parse_request', array( $this->public, 'parse_request' ) );
 		add_filter( 'query_vars', array( $this->public, 'add_query_vars' ) );
-		add_action( 'template_redirect', array( $this->public, 'handle_markdown_requests' ), 1 );
-		add_action( 'template_redirect', array( $this->public, 'handle_llms_txt_requests' ), 1 );
+		add_action( 'template_redirect', array( $this, 'public', 'handle_markdown_requests' ), 1 );
+		add_action( 'template_redirect', array( $this, 'public', 'handle_llms_txt_requests' ), 1 );
 
 		// Activation hook to flush rewrite rules.
 		register_activation_hook( LLMS_TXT_PLUGIN_FILE, array( $this, 'activate' ) );
@@ -130,6 +130,7 @@ class LLMS_Txt_Core {
 	 */
 	public function invalidate_cache() {
 		delete_transient( 'llms_txt_cache' );
+		delete_transient( 'llms_txt_cache_attempted' );
 	}
 
 	/**
@@ -203,10 +204,11 @@ class LLMS_Txt_Core {
 			$errors[] = __( 'The posts limit is set very high, which may impact performance.', 'wpproatoz-llms-txt-for-wp' );
 		}
 
-		// Check for cache issues, but only if settings weren't just updated.
-		if ( ! isset( $_GET['settings-updated'] ) || $_GET['settings-updated'] !== 'true' ) {
+		// Check for cache issues, but only if a recent attempt to generate llms.txt was made.
+		$cache_attempted = get_transient( 'llms_txt_cache_attempted' );
+		if ( false !== $cache_attempted && ! empty( $settings['post_types'] ) && $settings['posts_limit'] > 0 ) {
 			$cache = get_transient( 'llms_txt_cache' );
-			if ( false === $cache && ! empty( $settings['post_types'] ) && $settings['posts_limit'] > 0 ) {
+			if ( false === $cache ) {
 				$errors[] = __( 'Failed to retrieve or set llms.txt cache. Check server caching configuration.', 'wpproatoz-llms-txt-for-wp' );
 			}
 		}

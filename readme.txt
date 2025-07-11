@@ -3,7 +3,7 @@ Contributors: ahkonsu
 Tags: llms, ai, large language models, markdown, seo
 Requires at least: 6.0
 Tested up to: 6.6
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -91,6 +91,9 @@ The plugin caches the `llms.txt` content using a transient (`llms_txt_cache`) fo
 3. **Markdown Output**: Access a post’s Markdown version by appending `.md` to its URL.
 
 == Changelog ==
+
+= 1.1.1 =
+* minor bug fix
 
 = 1.1.0 =
 * Finalized plugin with all security improvements from assessment.

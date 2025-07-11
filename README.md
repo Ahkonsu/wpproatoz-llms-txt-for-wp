@@ -1,6 +1,6 @@
 # LLMs.txt for WP
 
-![Plugin Version](https://img.shields.io/badge/version-1.1.0-blue.svg) ![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue.svg) ![PHP](https://img.shields.io/badge/PHP-8.0%2B-blue.svg) ![License](https://img.shields.io/badge/license-GPLv2-green.svg)
+![Plugin Version](https://img.shields.io/badge/version-1.1.1-blue.svg) ![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue.svg) ![PHP](https://img.shields.io/badge/PHP-8.0%2B-blue.svg) ![License](https://img.shields.io/badge/license-GPLv2-green.svg)
 
 A WordPress plugin that generates an AI-friendly `llms.txt` file and Markdown versions of posts, optimizing your site for Large Language Models (LLMs).
 
@@ -49,6 +49,9 @@ Enable Markdown support in settings, then append `.md` to any post/page URL (e.g
 ---
 
 ## Changelog
+
+### Version 1.1.1
+- Minor bug fix
 
 ### Version 1.1.0
 - Final production-ready release with all security improvements.
