@@ -183,12 +183,12 @@ class LLMS_Txt_Public {
 				} else {
 					throw new Exception( 'Selected post is not accessible or does not exist: ID ' . $settings['selected_post'] );
 				}
-			} elseif ( ! empty( $settings['post_types'] ) ) {
+			} else {
 				// Validate post types.
 				$valid_post_types = get_post_types( array( 'public' => true ), 'names' );
 				$settings['post_types'] = array_intersect( $settings['post_types'], $valid_post_types );
 
-				// All posts, grouped by post type. Also include site name and description.
+				// All posts, grouped by post type and categories. Also include site name and description.
 				$output .= '# ' . esc_html( get_bloginfo( 'name' ) ) . "\n\n";
 				$bloginfo = get_bloginfo( 'description' );
 				if ( ! empty( $bloginfo ) ) {
@@ -199,14 +199,19 @@ class LLMS_Txt_Public {
 				if ( 'yes' === $settings['enable_md_support'] ) {
 					$output .= "## Available Content\n\n";
 
-					// If .md support is enabled, link to the markdown version of the posts without post type slug.
+					// List posts by post type.
 					foreach ( $settings['post_types'] as $post_type ) {
-						$posts = get_posts( array(
+						$args = array(
 							'post_type'      => $post_type,
 							'posts_per_page' => $settings['posts_limit'],
 							'post_status'    => 'publish',
 							'fields'         => 'ids', // Optimize query.
-						) );
+						);
+						// Apply category filter only for non-post post types that support categories.
+						if ( $post_type !== 'post' && ! empty( $settings['categories'] ) && in_array( 'category', get_object_taxonomies( $post_type ), true ) ) {
+							$args['category__in'] = $settings['categories'];
+						}
+						$posts = get_posts( $args );
 
 						if ( ! empty( $posts ) ) {
 							$post_type_obj = get_post_type_object( $post_type );
@@ -226,6 +231,39 @@ class LLMS_Txt_Public {
 							$output .= "\n";
 						}
 					}
+
+					// List posts by category if specific categories are selected.
+					if ( ! empty( $settings['categories'] ) ) {
+						$categories = get_categories( array(
+							'include'    => $settings['categories'],
+							'hide_empty' => false,
+						) );
+						foreach ( $categories as $category ) {
+							$args = array(
+								'post_type'      => $settings['post_types'],
+								'posts_per_page' => $settings['posts_limit'],
+								'post_status'    => 'publish',
+								'fields'         => 'ids',
+								'category__in'   => array( $category->term_id ),
+							);
+							$posts = get_posts( $args );
+
+							if ( ! empty( $posts ) ) {
+								$output .= '### ' . esc_html( $category->name ) . "\n\n";
+								if ( ! empty( $category->description ) ) {
+									$output .= '#### ' . esc_html( $category->description ) . "\n\n";
+								}
+								foreach ( $posts as $post_id ) {
+									if ( current_user_can( 'read_post', $post_id ) ) {
+										$post = get_post( $post_id );
+										$slug = $post->post_name;
+										$output .= '* [' . esc_html( $post->post_title ) . '](' . esc_url( home_url( '/' . $slug . '.md' ) ) . ")\n";
+									}
+								}
+								$output .= "\n";
+							}
+						}
+					}
 				} else {
 					// If .md support is not enabled, show the post title and content.
 					foreach ( $settings['post_types'] as $post_type ) {
@@ -234,6 +272,10 @@ class LLMS_Txt_Public {
 							'posts_per_page' => $settings['posts_limit'],
 							'post_status'    => 'publish',
 						);
+						// Apply category filter only for non-post post types that support categories.
+						if ( $post_type !== 'post' && ! empty( $settings['categories'] ) && in_array( 'category', get_object_taxonomies( $post_type ), true ) ) {
+							$args['category__in'] = $settings['categories'];
+						}
 						$args = apply_filters( 'llms_txt_posts_args', $args, $post_type, current_user_can( 'read', $post_type ) );
 						$posts = get_posts( $args );
 
@@ -241,6 +283,8 @@ class LLMS_Txt_Public {
 							if ( ! current_user_can( 'read', $post_type ) ) {
 								continue; // Skip post types the user cannot read.
 							}
+							$output .= '### ' . esc_html( get_post_type_object( $post_type )->labels->name ) . "\n\n";
+
 							foreach ( $posts as $post ) {
 								if ( current_user_can( 'read_post', $post->ID ) ) {
 									$output .= LLMS_Txt_Markdown::convert_post_to_markdown( $post, true ) . "\n\n";
@@ -249,14 +293,37 @@ class LLMS_Txt_Public {
 							}
 						}
 					}
+
+					// List posts by category if specific categories are selected and .md support is disabled.
+					if ( ! empty( $settings['categories'] ) ) {
+						$categories = get_categories( array(
+							'include'    => $settings['categories'],
+							'hide_empty' => false,
+						) );
+						foreach ( $categories as $category ) {
+							$args = array(
+								'post_type'      => $settings['post_types'],
+								'posts_per_page' => $settings['posts_limit'],
+								'post_status'    => 'publish',
+								'category__in'   => array( $category->term_id ),
+							);
+							$posts = get_posts( $args );
+
+							if ( ! empty( $posts ) ) {
+								$output .= '### ' . esc_html( $category->name ) . "\n\n";
+								if ( ! empty( $category->description ) ) {
+									$output .= esc_html( $category->description ) . "\n\n";
+								}
+								foreach ( $posts as $post ) {
+									if ( current_user_can( 'read_post', $post->ID ) ) {
+										$output .= LLMS_Txt_Markdown::convert_post_to_markdown( $post, true ) . "\n\n";
+										$output .= "---\n\n";
+									}
+								}
+							}
+						}
+					}
 				}
-			} else {
-				$output .= '# ' . esc_html( get_bloginfo( 'name' ) ) . "\n\n";
-				$bloginfo = get_bloginfo( 'description' );
-				if ( ! empty( $bloginfo ) ) {
-					$output .= esc_html( $bloginfo ) . "\n\n";
-				}
-				$output .= "---\n\n";
 			}
 
 			// Cache the output.

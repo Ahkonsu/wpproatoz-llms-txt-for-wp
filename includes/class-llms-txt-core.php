@@ -204,6 +204,15 @@ class LLMS_Txt_Core {
 			$errors[] = __( 'The posts limit is set very high, which may impact performance.', 'wpproatoz-llms-txt-for-wp' );
 		}
 
+		// Check for invalid categories.
+		if ( ! empty( $settings['categories'] ) ) {
+			$valid_categories = get_categories( array( 'fields' => 'ids' ) );
+			$invalid_categories = array_diff( $settings['categories'], $valid_categories );
+			if ( ! empty( $invalid_categories ) ) {
+				$errors[] = __( 'One or more selected categories are invalid or do not exist.', 'wpproatoz-llms-txt-for-wp' );
+			}
+		}
+
 		// Check for cache issues, but only if a recent attempt to generate llms.txt was made.
 		$cache_attempted = get_transient( 'llms_txt_cache_attempted' );
 		if ( false !== $cache_attempted && ! empty( $settings['post_types'] ) && $settings['posts_limit'] > 0 ) {
@@ -238,6 +247,7 @@ class LLMS_Txt_Core {
 			'post_types'        => array( 'post', 'page' ), // Default public post types
 			'posts_limit'       => 100, // Positive integer
 			'enable_md_support' => 'yes', // 'yes' or ''
+			'categories'        => array(), // Selected category IDs
 		);
 
 		return wp_parse_args( get_option( 'llms_txt_settings', array() ), $defaults );

@@ -68,6 +68,14 @@ class LLMS_Txt_Admin {
 		);
 
 		add_settings_field(
+			'categories',
+			__( 'Categories to Include', 'wpproatoz-llms-txt-for-wp' ),
+			array( $this, 'render_categories_field' ),
+			'llms-txt-settings',
+			'llms_txt_general_section'
+		);
+
+		add_settings_field(
 			'posts_limit',
 			__( 'Posts Limit', 'wpproatoz-llms-txt-for-wp' ),
 			array( $this, 'render_posts_limit_field' ),
@@ -134,6 +142,8 @@ class LLMS_Txt_Admin {
 			(function() {
 				var selectedPost = document.getElementById('llms_txt_settings_selected_post');
 				var postTypes = document.querySelectorAll('input[name="llms_txt_settings[post_types][]"]');
+				var categories = document.querySelectorAll('input[name="llms_txt_settings[categories][]"]');
+				var allCategories = document.querySelector('input[name="llms_txt_settings[all_categories]"]');
 				var mdSupport = document.getElementById('llms_txt_settings_enable_md_support');
 				var hint = document.getElementById('llms-txt-settings-hint');
 				var hintHasMdSupport = document.getElementById('llms-txt-settings-hint-has-md-support');
@@ -150,11 +160,16 @@ class LLMS_Txt_Admin {
 					}).map(function(type) {
 						return type.nextElementSibling ? type.nextElementSibling.textContent : '';
 					});
+					var selectedCategories = Array.from(categories).filter(function(cat) {
+						return cat.checked;
+					}).map(function(cat) {
+						return cat.nextElementSibling ? cat.nextElementSibling.textContent : '';
+					});
+					var allCategoriesSelected = allCategories.checked && selectedCategories.length === 0;
 
 					if (selectedPostValue) {
 						hint.textContent = 'the content of the "' + selectedPostText + '" page';
 					} else {
-						// hint.textContent = types.length ? 'all ' + types.join(', ') : 'just the site name and description';
 						if (types.length) {
 							var content = '';
 							if (hasMdSupport) {
@@ -162,7 +177,11 @@ class LLMS_Txt_Admin {
 							} else {
 								content = 'the contents of the ';
 							}
-							hint.textContent = content + 'latest ' + postsLimit.value + ' ' + types.join(', ');
+							var categoryText = allCategoriesSelected || !selectedCategories.length ? '' : ' and categories ' + selectedCategories.join(', ') + ' with their descriptions';
+							if (!allCategoriesSelected && selectedCategories.length && types.includes('Posts')) {
+								content += 'latest ' + postsLimit.value + ' Posts, ';
+							}
+							hint.textContent = content + types.join(', ') + categoryText;
 						} else {
 							hint.textContent = 'just the site name and description';
 						}
@@ -176,13 +195,34 @@ class LLMS_Txt_Admin {
 						hintHasMdSupport.style.display = 'none';
 						hintNoMdSupport.style.display = 'inline';
 					}
-					
+				}
+
+				// Auto-deselect "All Categories" when a specific category is checked.
+				function handleCategorySelection() {
+					var anyCategoryChecked = Array.from(categories).some(function(cat) {
+						return cat.checked;
+					});
+					if (anyCategoryChecked) {
+						allCategories.checked = false;
+					}
+					updateHint();
 				}
 
 				selectedPost.addEventListener('change', updateHint);
 				postsLimit.addEventListener('change', updateHint);
 				postTypes.forEach(function(type) {
 					type.addEventListener('change', updateHint);
+				});
+				categories.forEach(function(cat) {
+					cat.addEventListener('change', handleCategorySelection);
+				});
+				allCategories.addEventListener('change', function() {
+					if (allCategories.checked) {
+						categories.forEach(function(cat) {
+							cat.checked = false;
+						});
+					}
+					updateHint();
 				});
 				mdSupport.addEventListener('change', updateHint);
 
@@ -216,7 +256,7 @@ class LLMS_Txt_Admin {
 				'selected'          => $this->settings['selected_post'],
 			)
 		);
-		echo '<p class="description">' . esc_html__( 'If a page is selected, only that page will be included in the llms.txt file. If no page is selected, all posts from selected post types will be included.', 'wpproatoz-llms-txt-for-wp' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'If a page is selected, only that page will be included in the llms.txt file. If no page is selected, posts from selected post types and categories will be included.', 'wpproatoz-llms-txt-for-wp' ) . '</p>';
 	}
 
 	/**
@@ -243,6 +283,32 @@ class LLMS_Txt_Admin {
 			);
 		}
 		echo '<p class="description">' . esc_html__( 'Select the post types to include in the llms.txt file and the *.md support.', 'wpproatoz-llms-txt-for-wp' ) . '</p>';
+	}
+
+	/**
+	 * Render categories field.
+	 */
+	public function render_categories_field() {
+		$categories = get_categories( array( 'hide_empty' => false ) );
+		$all_selected = empty( $this->settings['categories'] );
+
+		// Add "All Categories" option.
+		printf(
+			'<label><input type="checkbox" name="llms_txt_settings[all_categories]" value="1" %s> <span>%s</span></label><br>',
+			checked( $all_selected, true, false ),
+			esc_html__( 'All Categories', 'wpproatoz-llms-txt-for-wp' )
+		);
+
+		// List individual categories.
+		foreach ( $categories as $category ) {
+			printf(
+				'<label><input type="checkbox" name="llms_txt_settings[categories][]" value="%d" %s> <span>%s</span></label><br>',
+				esc_attr( $category->term_id ),
+				checked( in_array( $category->term_id, $this->settings['categories'], true ), true, false ),
+				esc_html( $category->name )
+			);
+		}
+		echo '<p class="description">' . esc_html__( 'Select specific categories to include posts in llms.txt as separate sections with their descriptions. Selecting a category will deselect "All Categories" to ensure your selections are saved. If "All Categories" is checked, posts will be listed only under post types. Posts will always include the latest posts regardless of category. Applies only to post types that support categories.', 'wpproatoz-llms-txt-for-wp' ) . '</p>';
 	}
 
 	/**
@@ -289,6 +355,16 @@ class LLMS_Txt_Admin {
 		$output['post_types'] = array_filter( $output['post_types'], function( $post_type ) use ( $valid_post_types ) {
 			return in_array( $post_type, $valid_post_types, true );
 		});
+
+		// Sanitize and validate categories
+		$output['categories'] = array();
+		if ( ! isset( $input['all_categories'] ) || $input['all_categories'] !== '1' || ! empty( $input['categories'] ) ) {
+			$output['categories'] = isset( $input['categories'] ) && is_array( $input['categories'] ) ? array_map( 'absint', $input['categories'] ) : array();
+			$valid_categories = get_categories( array( 'fields' => 'ids' ) );
+			$output['categories'] = array_filter( $output['categories'], function( $cat_id ) use ( $valid_categories ) {
+				return in_array( $cat_id, $valid_categories, true );
+			});
+		}
 
 		// Sanitize posts_limit
 		$output['posts_limit'] = isset( $input['posts_limit'] ) ? max( 1, absint( $input['posts_limit'] ) ) : 100;

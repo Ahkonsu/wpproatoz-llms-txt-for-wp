@@ -3,7 +3,7 @@ Contributors: ahkonsu
 Tags: llms, ai, large language models, markdown, seo
 Requires at least: 6.0
 Tested up to: 6.6
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -17,9 +17,9 @@ Generate an AI-friendly llms.txt file for your WordPress site and enable Markdow
 Inspired by the [llms.txt standard](https://llmstxt.org/), this plugin is perfect for bloggers, businesses, and developers who want to optimize their content for AI-driven search and discovery. It’s lightweight, customizable, and easy to set up.
 
 = Features =
-* **Generate llms.txt**: Create an `llms.txt` file with a selected page or posts from chosen post types in a format optimized for LLMs.
+* **Generate llms.txt**: Create an `llms.txt` file with a selected page or posts from chosen post types and categories in a format optimized for LLMs.
 * **Markdown Support**: Enable Markdown versions of your content by appending `.md` to post/page URLs (e.g., `https://example.com/your-post.md`).
-* **Customizable Settings**: Choose a specific page or post types to include in `llms.txt` via an intuitive admin settings page.
+* **Customizable Settings**: Choose a specific page, post types, or categories to include in `llms.txt` via an intuitive admin settings page.
 * **Post Limit Control**: Set the maximum number of posts to include in `llms.txt` to keep the output manageable.
 * **SEO-Friendly**: Improve your site’s visibility in AI-driven search by providing structured content.
 * **Caching**: Uses transients to cache `llms.txt` content, reducing database queries for better performance.
@@ -45,7 +45,7 @@ The `llms.txt` standard is like `robots.txt` for AI. It ensures that Large Langu
    - After installation, click **Activate Plugin** from the Plugins menu.
 5. **Configure Settings**:
    - Navigate to **Settings > LLMs.txt Settings** in the WordPress admin.
-   - Select a specific page or post types to include in `llms.txt`.
+   - Select a specific page, post types, or categories to include in `llms.txt`.
    - Set the maximum number of posts to include.
    - Enable Markdown support if desired.
 6. **Verify Output**:
@@ -61,7 +61,10 @@ An `llms.txt` file is a Markdown file that provides structured content for Large
 Enable Markdown support in the plugin settings. Then, append `.md` to any post or page URL (e.g., `https://example.com/your-post.md`) to view its Markdown version.
 
 = Can I choose which content appears in llms.txt? =
-Yes! In the **Settings > LLMs.txt Settings** page, you can select a specific page or post types and set a maximum post limit.
+Yes! In the **Settings > LLMs.txt Settings** page, you can select a specific page, post types, categories, and set a maximum post limit.
+
+= Can I filter posts by category in llms.txt? =
+Yes! Select specific categories or choose "All Categories" in the settings. Specific categories will appear as separate sections with their descriptions alongside post types, while the Posts section will always include the latest posts regardless of category. Selecting a category will deselect "All Categories" to ensure your selections are saved. Applies to post types that support categories.
 
 = Does this plugin affect my site’s SEO? =
 While the plugin doesn’t directly modify traditional SEO, it optimizes your content for AI-driven search and discovery, which is increasingly important as AI tools like ChatGPT and Perplexity gain popularity.
@@ -79,7 +82,7 @@ If the library is not installed, an admin notice will appear, and the plugin wil
 Uninstalling the plugin removes the `llms_txt_settings` option, `llms_txt_cache` transient, and any other transients created by the plugin. No physical `llms.txt` file is created, but the plugin checks for and deletes it if present.
 
 = What if llms.txt or .md URLs return 404 errors? =
-This may indicate a rewrite rule conflict with another plugin or theme. Go to **Settings > Permalinks** and click Save Changes to flush rewrite rules. If the issue persists, check for conflicting plugins/themes or contact support via the GitHub repository.
+This may indicate a rewrite rule conflict with another plugin or theme. Go to **Settings > Permalinks and click Save Changes to flush rewrite rules. If the issue persists, check for conflicting plugins/themes or contact support via the GitHub repository.
 
 = How does caching work for llms.txt? =
 The plugin caches the `llms.txt` content using a transient (`llms_txt_cache`) for 1 hour to reduce database queries. The cache is invalidated when settings are updated or relevant posts are modified.
@@ -92,11 +95,16 @@ The plugin caches the `llms.txt` content using a transient (`llms_txt_cache`) fo
 
 == Changelog ==
 
+= 1.2.0 =
+* Added category filtering for posts in `llms.txt`, with separate sections for selected categories including their descriptions as h4 headings (Markdown mode) or plain text (non-Markdown mode).
+* Modified `llms.txt` to include unfiltered Posts section with latest posts when specific categories are selected, alongside category sections.
+* Fixed bug where selecting specific categories did not deselect "All Categories", ensuring category selections are saved.
+
 = 1.1.2 =
-*Fixed 404 errors for .md URLs of custom post types by using post slugs without post type prefixes.
+* Fixed 404 errors for `.md` URLs of custom post types by using post slugs without post type prefixes.
 
 = 1.1.1 =
-* minor bug fix Fixed cache notice appearing prematurely after settings updates.
+* Fixed cache notice appearing prematurely after settings updates.
 
 = 1.1.0 =
 * Finalized plugin with all security improvements from assessment.
@@ -146,7 +154,7 @@ The plugin caches the `llms.txt` content using a transient (`llms_txt_cache`) fo
 
 == Upgrade Notice ==
 
-= 1.1.0 =
-Final production-ready release with all security improvements. Ensure `league/html-to-markdown` (^2.2.7) is installed via Composer.
+= 1.2.0 =
+Update adds category filtering with descriptions, unfiltered Posts section, and fixes category selection bug for llms.txt content. Ensure `league/html-to-markdown` (^2.2.7) is installed via Composer.
 
 ?>

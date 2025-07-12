@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/Ahkonsu/wpproatoz-llms-txt-for-wp
  * Forked from: https://github.com/WP-Autoplugin/llms-txt-for-wp
  * Description: This plugin will generate LLM-friendly content as an llms.txt file and provides markdown versions of posts. This make it easier for AI to search your site and use less resources when doing do. Generates an llms.txt file for AI-friendly content and supports Markdown versions of posts and pages 
- * Version: 1.1.2
+ * Version: 1.2.0
  * Requires at least: 6.0
  * Requires PHP: 8.0
  * Author: WPProAtoZ
@@ -48,7 +48,7 @@ $myUpdateChecker->setBranch('main');
 /////////////////////
 
 // Define constants.
-define( 'LLMS_TXT_VERSION', '1.1.0' );
+define( 'LLMS_TXT_VERSION', '1.2.0' );
 define( 'LLMS_TXT_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LLMS_TXT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'LLMS_TXT_PLUGIN_FILE', __FILE__ );
