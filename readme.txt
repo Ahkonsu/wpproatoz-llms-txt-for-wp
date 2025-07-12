@@ -92,8 +92,11 @@ The plugin caches the `llms.txt` content using a transient (`llms_txt_cache`) fo
 
 == Changelog ==
 
+= 1.1.2 =
+*Fixed 404 errors for .md URLs of custom post types by using post slugs without post type prefixes.
+
 = 1.1.1 =
-* minor bug fix
+* minor bug fix Fixed cache notice appearing prematurely after settings updates.
 
 = 1.1.0 =
 * Finalized plugin with all security improvements from assessment.

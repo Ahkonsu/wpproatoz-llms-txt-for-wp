@@ -48,23 +48,13 @@ class LLMS_Txt_Public {
 			'top'
 		);
 
-		// Add .md rule if enabled.
+		// Add .md rule if enabled, without post type prefix.
 		if ( 'yes' === $settings['enable_md_support'] ) {
-			// Make .md rule more specific to post types.
-			$post_types = implode( '|', array_map( 'preg_quote', $settings['post_types'] ) );
-			if ( ! empty( $post_types ) ) {
-				add_rewrite_rule(
-					'(' . $post_types . ')/(.+?)\.md$',
-					'index.php?markdown=1&llms_md_path=$matches[2]&post_type=$matches[1]',
-					'top'
-				);
-			} else {
-				add_rewrite_rule(
-					'(.+?)\.md$',
-					'index.php?markdown=1&llms_md_path=$matches[1]',
-					'top'
-				);
-			}
+			add_rewrite_rule(
+				'(.+?)\.md$',
+				'index.php?markdown=1&llms_md_path=$matches[1]',
+				'top'
+			);
 		}
 	}
 
@@ -118,7 +108,16 @@ class LLMS_Txt_Public {
 			wp_die( esc_html__( 'Invalid Markdown request.', 'wpproatoz-llms-txt-for-wp' ), 400 );
 		}
 
-		$post = get_page_by_path( $path, OBJECT, $settings['post_types'] );
+		// Query for the post across all selected post types using the slug.
+		$args = array(
+			'name'           => $path,
+			'post_type'      => $settings['post_types'],
+			'post_status'    => 'publish',
+			'posts_per_page' => 1,
+		);
+		$posts = get_posts( $args );
+		$post = ! empty( $posts ) ? $posts[0] : null;
+
 		if ( ! $post ) {
 			wp_die( esc_html__( 'Post not found.', 'wpproatoz-llms-txt-for-wp' ), 404 );
 		}
@@ -200,7 +199,7 @@ class LLMS_Txt_Public {
 				if ( 'yes' === $settings['enable_md_support'] ) {
 					$output .= "## Available Content\n\n";
 
-					// If .md support is enabled, link to the markdown version of the posts.
+					// If .md support is enabled, link to the markdown version of the posts without post type slug.
 					foreach ( $settings['post_types'] as $post_type ) {
 						$posts = get_posts( array(
 							'post_type'      => $post_type,
@@ -219,7 +218,9 @@ class LLMS_Txt_Public {
 							foreach ( $posts as $post_id ) {
 								if ( current_user_can( 'read_post', $post_id ) ) {
 									$post = get_post( $post_id );
-									$output .= '* [' . esc_html( $post->post_title ) . '](' . esc_url( untrailingslashit( get_permalink( $post ) ) ) . ".md)\n";
+									// Use post slug directly without post type prefix.
+									$slug = $post->post_name;
+									$output .= '* [' . esc_html( $post->post_title ) . '](' . esc_url( home_url( '/' . $slug . '.md' ) ) . ")\n";
 								}
 							}
 							$output .= "\n";
