@@ -1,4 +1,4 @@
-# LLMs.txt for WP
+# WPProAtoZ LLMs.txt for WP
 
 ![Plugin Version](https://img.shields.io/badge/version-1.2.0-blue.svg) ![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue.svg) ![PHP](https://img.shields.io/badge/PHP-8.0%2B-blue.svg) ![License](https://img.shields.io/badge/license-GPLv2-green.svg)
 
