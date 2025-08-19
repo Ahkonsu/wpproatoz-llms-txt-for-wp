@@ -51,6 +51,11 @@ Enable Markdown support in settings, then append `.md` to any post/page URL (e.g
 
 ## Changelog
 
+### Version 1.2.1
+* by dewolfe001 added functionality to pick file and make more complete and link in file
+* Adding a <link...> meta tag to link from the web page to the .md version of the page.
+* Change to add wp_remote_get() if the markdown content is too thin.
+  
 ### Version 1.2.0
 - Added category filtering for posts in `llms.txt`, with separate sections for selected categories including their descriptions as h4 headings (Markdown mode) or plain text (non-Markdown mode).
 - Modified `llms.txt` to include unfiltered Posts section with latest posts when specific categories are selected, alongside category sections.
