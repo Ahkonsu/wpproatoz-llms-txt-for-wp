@@ -96,6 +96,8 @@ The plugin caches the `llms.txt` content using a transient (`llms_txt_cache`) fo
 == Changelog ==
 = 1.2.1 =
 * by dewolfe001 added functionality to pick file and make more complete and link in file
+* Adding a <link...> meta tag to link from the web page to the .md version of the page.
+* Change to add wp_remote_get() if the markdown content is too thin.
 
 = 1.2.0 =
 * Added category filtering for posts in `llms.txt`, with separate sections for selected categories including their descriptions as h4 headings (Markdown mode) or plain text (non-Markdown mode).
