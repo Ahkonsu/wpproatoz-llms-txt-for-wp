@@ -57,6 +57,7 @@ class LLMS_Txt_Core {
 		add_filter( 'query_vars', array( $this->public, 'add_query_vars' ) );
 		add_action( 'template_redirect', array( $this->public, 'handle_markdown_requests' ), 1 );
 		add_action( 'template_redirect', array( $this->public, 'handle_llms_txt_requests' ), 1 );
+		add_action( 'wp_head', array( $this, 'add_markdown_meta_tags' ), 9, 1 );
 
 		// Activation hook to flush rewrite rules.
 		register_activation_hook( LLMS_TXT_PLUGIN_FILE, array( $this, 'activate' ) );
@@ -252,6 +253,35 @@ class LLMS_Txt_Core {
 
 		return wp_parse_args( get_option( 'llms_txt_settings', array() ), $defaults );
 	}
+
+	/**
+	 * Add markdown meta tags to the head section.
+	 */
+	public function add_markdown_meta_tags() {
+		$settings = self::get_settings();
+
+		// Only proceed if markdown support is enabled
+		if ( $settings['enable_md_support'] !== 'yes' ) {
+			return;
+		}
+
+		// Add markdown link for individual posts/pages
+		if ( is_single() || is_page() ) {
+			global $post;
+
+			// Check if this post type is supported
+			if ( in_array( $post->post_type, $settings['post_types'], true ) ) {
+				// Generate markdown URL (matches your existing URL structure)
+				$md_url = home_url( '/' . $post->post_name . '.md' );
+
+				echo '<link rel="alternate" type="text/markdown" href="' . esc_url( $md_url ) . '" title="Markdown version">' . "\n";
+			}
+		}
+
+		// Always add llms.txt reference
+		echo '<link rel="alternate" type="text/plain" href="' . esc_url( home_url( '/llms.txt' ) ) . '" title="LLM content">' . "\n";
+	}	
+	
 }
 
 ?>
