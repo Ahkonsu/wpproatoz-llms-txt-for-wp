@@ -94,6 +94,8 @@ The plugin caches the `llms.txt` content using a transient (`llms_txt_cache`) fo
 3. **Markdown Output**: Access a post’s Markdown version by appending `.md` to its URL.
 
 == Changelog ==
+= 1.2.1 =
+* by dewolfe001 added functionality to pick file and make more complete and link in file
 
 = 1.2.0 =
 * Added category filtering for posts in `llms.txt`, with separate sections for selected categories including their descriptions as h4 headings (Markdown mode) or plain text (non-Markdown mode).
