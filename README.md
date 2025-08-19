@@ -1,6 +1,6 @@
 # WPProAtoZ LLMs.txt for WP
 
-![Plugin Version](https://img.shields.io/badge/version-1.2.0-blue.svg) ![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue.svg) ![PHP](https://img.shields.io/badge/PHP-8.0%2B-blue.svg) ![License](https://img.shields.io/badge/license-GPLv2-green.svg)
+![Plugin Version](https://img.shields.io/badge/version-1.2.1-blue.svg) ![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue.svg) ![PHP](https://img.shields.io/badge/PHP-8.0%2B-blue.svg) ![License](https://img.shields.io/badge/license-GPLv2-green.svg)
 
 A WordPress plugin that generates an AI-friendly `llms.txt` file and Markdown versions of posts, optimizing your site for Large Language Models (LLMs).
 
